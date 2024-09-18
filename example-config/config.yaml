@@ -1,0 +1,9 @@
+one-way-sync-locations:
+  - name: "My iPhone 15"
+    id: "MyIphone15"
+    source: "/Users/myuser/Documents/rsynctest/source"
+    target: "/Users/myuser/Documents/rsynctest/target"
+  - name: "GoPro SD Card"
+    id: "GoproSDCard"
+    source: "/someFolder/someOtherFolder"
+    target: "/Users/myuser/Documents/rsynctest/target"
