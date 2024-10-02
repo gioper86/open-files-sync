@@ -18,6 +18,7 @@ class CommandRunner:
         except KeyError as e:
             logger.error("Error while accessing configuration for id " + id)
             print(f"Error: {e}")
+            raise
 
         rsync_command = ['rsync', '-avh', source, target]
     
@@ -25,12 +26,11 @@ class CommandRunner:
             rsync_command.insert(2, '--dry-run')
             print("[bold yellow]Warning![/bold yellow] rsync running in dry run mode. Add -run argument to actually run the sync")
 
-        try:
-            with subprocess.Popen(rsync_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as process:
-                for line in process.stdout:
-                    print(line, end='')
-        except subprocess.CalledProcessError as e:
-            logger.error("Error: Command failed "+ e.stderr)
-            print(f"Error: Command '{e.cmd}' failed with return code {e.returncode}")
-            print(f"Standard output: {e.stdout}")
-            print(f"Error output: {e.stderr}")
+        with subprocess.Popen(rsync_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as process:
+            for line in process.stdout:
+                print(line, end='')
+
+            stderr = process.stderr.read()
+            if stderr:
+                print("Standard Error:", stderr)
+

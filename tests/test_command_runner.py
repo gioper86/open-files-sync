@@ -35,18 +35,11 @@ class TestCommandRunner(unittest.TestCase):
                 stdout=subprocess.PIPE, 
                 stderr=subprocess.PIPE, 
                 text=True
-            )           
-
-    # def test_run_rsync_failure(self):
-    #     with patch("subprocess.run") as mock_run:
-    #         mock_run.return_value.returncode = 1
-    #         result = self.runner.run_rsync(456, False)
-    #         mock_run.assert_called_once_with(
-    #             ["/usr/bin/rsync", "/path/to/source", "/path/to/destination"],
-    #             capture_output=True,
-    #             text=True
-    #         )
-    #         self.assertEqual(result, False)
+            )
+               
+    def test_run_rsync_key_error(self):
+        with self.assertRaises(KeyError):
+            self.runner.run_rsync("InvalidIdId", False)
 
 if __name__ == "__main__":
     unittest.main()

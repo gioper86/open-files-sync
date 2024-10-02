@@ -15,7 +15,5 @@ def oneway(id: str, run: bool = False):
     command_runner = CommandRunner(config_parser.config)
     command_runner.run_rsync(id, run)
  
-    logger.info("This is an info message from main.")
-
 if __name__ == "__main__":
     app()
