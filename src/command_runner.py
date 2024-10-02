@@ -26,9 +26,9 @@ class CommandRunner:
             print("[bold yellow]Warning![/bold yellow] rsync running in dry run mode. Add -run argument to actually run the sync")
 
         try:
-            result = subprocess.run(rsync_command, capture_output=True, text=True, check=True)
-            logger.info("From command runner")
-            print(result.stdout)
+            with subprocess.Popen(rsync_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as process:
+                for line in process.stdout:
+                    print(line, end='')
         except subprocess.CalledProcessError as e:
             logger.error("Error: Command failed "+ e.stderr)
             print(f"Error: Command '{e.cmd}' failed with return code {e.returncode}")

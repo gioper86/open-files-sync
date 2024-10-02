@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch
 from src.command_runner import CommandRunner
+import subprocess
 
 class TestCommandRunner(unittest.TestCase):
     def setUp(self):
@@ -17,23 +18,23 @@ class TestCommandRunner(unittest.TestCase):
         self.runner = CommandRunner(self.config)
 
     def test_run_rsync_success(self):
-        with patch("subprocess.run") as mock_run:
+        with patch("subprocess.Popen") as mock_run:
             self.runner.run_rsync("MyIphone15", True)
             mock_run.assert_called_once_with(
                 ["rsync", "-avh", "/path/source","/path/target"],
-                capture_output=True,
-                text=True,
-                check=True
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.PIPE, 
+                text=True
             )
 
     def test_run_rsync_success_dryrun(self):
-        with patch("subprocess.run") as mock_run:
+        with patch("subprocess.Popen") as mock_run:
             self.runner.run_rsync("MyIphone15", False)
             mock_run.assert_called_once_with(
                 ["rsync", "-avh", "--dry-run", "/path/source","/path/target"],
-                capture_output=True,
-                text=True,
-                check=True
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.PIPE, 
+                text=True
             )           
 
     # def test_run_rsync_failure(self):
