@@ -20,17 +20,35 @@ class CommandRunner:
             print(f"Error: {e}")
             raise
 
+        self.__run_command(source, target, run)
+    
+    def __run_command(self, source, target, run):
         rsync_command = ['rsync', '-avh', source, target]
+        files = []
     
         if not run:
             rsync_command.insert(2, '--dry-run')
             print("[bold yellow]Warning![/bold yellow] rsync running in dry run mode. Add -run argument to actually run the sync")
 
         with subprocess.Popen(rsync_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as process:
+
+            first_line = next(process.stdout)
+            print("First line: ", first_line)
+
             for line in process.stdout:
-                print(line, end='')
+                if line.endswith('\n'):
+                    line = line.rstrip('\n')
+
+                if line == "":
+                    break
+
+                if not line.endswith('/'):
+                    files.append(line)
+                    print(line)
 
             stderr = process.stderr.read()
             if stderr:
                 print("Standard Error:", stderr)
-
+        print(files)
+        return files
+    
